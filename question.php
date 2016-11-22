@@ -217,9 +217,9 @@ class qtype_coderunner_question extends question_graded_automatically {
     /******************************************************************
      * Interface methods for use by jobrunner
      ******************************************************************/
-    // Return the per-test template
-    public function get_per_test_template() {
-        return $this->pertesttemplate;
+    // Return the template
+    public function get_template() {
+        return $this->template;
     }
 
 
@@ -241,14 +241,9 @@ class qtype_coderunner_question extends question_graded_automatically {
     }
 
 
-    // Return the combinator template, or NULL if it's empty or if
-    // not enabled.
-    public function get_combinator() {
-        if (!$this->enablecombinator || empty($this->combinatortemplate)) {
-            return null;
-        } else {
-            return $this->combinatortemplate;
-        }
+    // Return whether or not the template is a combinator
+    public function get_is_combinator() {
+        return $this->iscombinatortemplate;
     }
 
     // Return an instance of the sandbox to be used to run code for this question.
