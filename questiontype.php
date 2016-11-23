@@ -606,7 +606,7 @@ class qtype_coderunner extends question_type {
                 }
             } else {
                 if ($field === 'iscombinatortemplate' && isset($qo->iscombinatortemplate)) {
-                    continue; // Already loaded for a legacy question
+                    continue; // Already loaded in the case of a legacy question
                 }
                 if (array_key_exists($field, $newdefaults)) {
                     $default = $newdefaults[$field];

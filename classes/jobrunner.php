@@ -80,7 +80,7 @@ class qtype_coderunner_jobrunner {
             'QUESTION' => $question
          );
 
-        if ($question->get_is_combinator()) {
+        if ($question->get_is_combinator() and $this->has_no_stdins()) {
             $outcome = $this->run_combinator();
         } else {
             $outcome = null;
@@ -174,9 +174,9 @@ class qtype_coderunner_jobrunner {
         $outcome = new qtype_coderunner_testing_outcome($maxmark, $numtests);
         foreach ($this->testcases as $testcase) {
             if ($this->question->iscombinatortemplate) {
-                $this->templateparams['TEST'] = $testcase;
-            } else {
                 $this->templateparams['TESTCASES'] = array($testcase);
+            } else {
+                $this->templateparams['TEST'] = $testcase;
             }
             try {
                 $testprog = $this->twig->render($this->template, $this->templateparams);

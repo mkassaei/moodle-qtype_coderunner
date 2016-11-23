@@ -269,10 +269,15 @@ class qtype_coderunner_question extends question_graded_automatically {
     public function get_grader() {
         global $CFG;
         $grader = $this->grader == null ? constants::DEFAULT_GRADER : $this->grader;
-        $filename = qtype_coderunner_grader::get_filename($grader);
+        if ($grader === 'CombinatorTemplateGrader') { // Legacy grader type
+            $grader = 'TemplateGrader';
+            assert($this->iscombinatortemplate);
+        }
         $graders = qtype_coderunner_grader::available_graders();
         $graderclass = $graders[$grader];
-        return new $graderclass();
+
+        $graderinstance = new $graderclass();
+        return $graderinstance;
     }
 
 

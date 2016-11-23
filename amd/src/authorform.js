@@ -54,6 +54,7 @@ define(['jquery'], function($) {
             template = $('#id_template'),
             useace = $('#id_useace'),
             language = $('#id_language'),
+            acelang = $('#id_acelang'),
             customise = $('#id_customise'),
             customisationFieldSet = $('#id_customisationheader'),
             advancedCustomisation = $('#id_advancedcustomisationheader'),
@@ -65,16 +66,16 @@ define(['jquery'], function($) {
             precheck = $('select#id_precheck'),
             testtypedivs = $('div[id^=fitem_id_testtype]');
 
-        // Check if need to (re-)initialise Ace in a textarea. Do this if
-        // the textarea or its Ace wrapper is visible and Ace is enabled.
+        // Check if need to (re-)initialise Ace in a given textarea with a
+        // given language.
+        // Do this if the textarea or its Ace wrapper is visible and Ace is enabled.
         // If Ace is already enabled, a call to initAce will reload its contents.
-        function checkAceStatus(textarea) {
-            var lang = language.prop('value').toLowerCase();
+        function checkAceStatus(textarea, lang) {
             var textareaVisible = $('#id_' + textarea).is(':visible') ||
                     $('#id_' + textarea + '_wrapper').is(':visible');
             if (useace.prop('checked') && textareaVisible) {
                 require(['qtype_coderunner/aceinterface'], function(AceInterface) {
-                    AceInterface.initAce('id_' + textarea, lang);
+                    AceInterface.initAce('id_' + textarea, lang.toLowerCase());
                 });
             }
         }
@@ -84,7 +85,7 @@ define(['jquery'], function($) {
             customisationFieldSet.css('display', display);
             advancedCustomisation.css('display', display);
             if (isVisible) {
-                checkAceStatus('template');
+                checkAceStatus('template', language.prop('value'));
             }
         }
 
@@ -188,7 +189,7 @@ define(['jquery'], function($) {
             customise.prop('disabled', true);
         }
 
-        checkAceStatus('answer');
+        checkAceStatus('answer', acelang.prop('value'));
         setCustomisationVisibility(isCustomised);
         if (!isCustomised) {
             loadCustomisationFields();
@@ -214,6 +215,10 @@ define(['jquery'], function($) {
             }
         });
 
+        acelang.on('change', function() {
+            checkAceStatus('answer', acelang.prop('value'));
+        });
+
 
         typeCombo.on('change', function() {
             if (!customise.prop('checked') ||
@@ -225,8 +230,8 @@ define(['jquery'], function($) {
         useace.on('change', function() {
             var isTurningOn = useace.prop('checked');
             if (isTurningOn) {
-                checkAceStatus('template');
-                checkAceStatus('answer');
+                checkAceStatus('template', language.prop('value'));
+                checkAceStatus('answer', acelang.prop('value'));
             } else {
                 require(['qtype_coderunner/aceinterface'], function(AceInterface) {
                     AceInterface.stopUsingAce();
